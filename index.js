@@ -2,7 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => (
-    <div>A waterfall create by react-hooks.</div>
+    <div>
+        <p>A waterfall create by react-hooks.</p>
+        <style jsx>{`
+            p {
+                color: orange;
+            }
+        `}</style>
+    </div>
 )
 
 ReactDOM.render(
