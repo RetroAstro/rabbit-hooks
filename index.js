@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 const App = () => (
     <div>
-        <p>A waterfall create by react-hooks.</p>
+        <p>A waterfall created by react-hooks.</p>
         <style jsx>{`
             p {
                 color: orange;
