@@ -7,6 +7,7 @@ const App = () => (
         <style jsx>{`
             p {
                 color: orange;
+                font-size: 16px;
             }
         `}</style>
     </div>
