@@ -1,2 +1,2 @@
 # hooks
-A waterfall created by react-hooks.
+A waterfall created by react-hooks
