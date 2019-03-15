@@ -1,19 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 
-const App = () => (
-    <div>
-        <p>A waterfall created by react-hooks.</p>
-        <style jsx>{`
-            p {
-                color: orange;
-                font-size: 16px;
-            }
-        `}</style>
-    </div>
-)
+import Counter from './rabbit/Counter'
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
+const App = () => <Counter />
+
+render(
+   <App />,
+   document.getElementById('root')
 )

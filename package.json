@@ -1,23 +1,17 @@
 {
-  "name": "hooks",
-  "version": "1.0.0",
-  "description": "waterfall by react-hooks",
+  "name": "rabbit-hooks",
   "main": "index.js",
-  "scripts": {
-    "start": "parcel index.html"
-  },
   "author": "RetroAstro",
-  "license": "MIT",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
+  },
   "dependencies": {
-    "react": "^16.8.0-alpha.1",
-    "react-dom": "^16.8.0-alpha.1",
-    "styled-jsx": "^3.2.0"
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "styled-components": "^4.1.3"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "eslint-plugin-react-hooks": "0.0.0",
-    "parcel-bundler": "^1.11.0"
+    "parcel-bundler": "^1.12.2"
   }
 }
