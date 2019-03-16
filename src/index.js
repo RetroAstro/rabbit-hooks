@@ -1,7 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-import Counter from './counter'
+import StaleCounter from './stale-counter'
+import ReducerCounter from './reducer-counter'
 import Interval from './interval'
 import Profile from './profile'
 import Message from './message'
