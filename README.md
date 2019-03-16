@@ -267,6 +267,227 @@ function Article({ id }) {
 }
 ```
 
+**请求网络资源：可改变请求的 url ，加载状态，错误处理。** 
+
+```jsx
+function App() {
+  const [data, setData] = useState({ hits: [] });
+  const [query, setQuery] = useState('redux');
+  const [url, setUrl] = useState(
+    'http://hn.algolia.com/api/v1/search?query=redux',
+  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await axios(url);
+
+        setData(result.data);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [url]);
+
+  return (
+    <Fragment>
+      <input
+        type="text"
+        value={query}
+        onChange={event => setQuery(event.target.value)}
+      />
+      <button
+        type="button"
+        onClick={() =>
+          setUrl(`http://hn.algolia.com/api/v1/search?query=${query}`)
+        }
+      >
+        Search
+      </button>
+
+      {isError && <div>Something went wrong ...</div>}
+
+      {isLoading ? (
+        <div>Loading ...</div>
+      ) : (
+        <ul>
+          {data.hits.map(item => (
+            <li key={item.objectID}>
+              <a href={item.url}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Fragment>
+  );
+}
+```
+
+**将请求网络资源逻辑抽象为 custom Hook**
+
+```jsx
+import React, { Fragment, useState, useEffect } from 'react';
+import axios from 'axios';
+
+const useDataApi = (initialUrl, initialData) => {
+  const [data, setData] = useState(initialData);
+  const [url, setUrl] = useState(initialUrl);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+
+      try {
+        const result = await axios(url);
+
+        setData(result.data);
+      } catch (error) {
+        setIsError(true);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [url]);
+
+  const doFetch = url => {
+    setUrl(url);
+  };
+
+  return { data, isLoading, isError, doFetch };
+};
+
+function App() {
+  const [query, setQuery] = useState('redux');
+  const { data, isLoading, isError, doFetch } = useDataApi(
+    'http://hn.algolia.com/api/v1/search?query=redux',
+    { hits: [] },
+  );
+
+  return (
+    <Fragment>
+      <form
+        onSubmit={event => {
+          doFetch(
+            `http://hn.algolia.com/api/v1/search?query=${query}`,
+          );
+
+          event.preventDefault();
+        }}
+      >
+        <input
+          type="text"
+          value={query}
+          onChange={event => setQuery(event.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      {isError && <div>Something went wrong ...</div>}
+
+      {isLoading ? (
+        <div>Loading ...</div>
+      ) : (
+        <ul>
+          {data.hits.map(item => (
+            <li key={item.objectID}>
+              <a href={item.url}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Fragment>
+  );
+}
+
+export default App;
+```
+
+**使用 useReducer 请求网络资源：抽象 custom Hook ，处理当组件的 url 多次改变时，先前的请求不会更新 state，同时也防止在组件卸载时刚好请求数据完成，从而更新 state 。**  
+
+```jsx
+const dataFetchReducer = (state, action) => {
+  switch (action.type) {
+    case 'FETCH_INIT':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      };
+    case 'FETCH_SUCCESS':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload,
+      };
+    case 'FETCH_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
+    default:
+      throw new Error();
+  }
+};
+
+const useDataApi = (initialUrl, initialData) => {
+  const [url, setUrl] = useState(initialUrl);
+
+  const [state, dispatch] = useReducer(dataFetchReducer, {
+    isLoading: false,
+    isError: false,
+    data: initialData,
+  });
+
+  useEffect(() => {
+    let didCancel = false;
+
+    const fetchData = async () => {
+      dispatch({ type: 'FETCH_INIT' });
+
+      try {
+        const result = await axios(url);
+
+        if (!didCancel) {
+          dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+        }
+      } catch (error) {
+        if (!didCancel) {
+          dispatch({ type: 'FETCH_FAILURE' });
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      didCancel = true;
+    };
+  }, [url]);
+
+  const doFetch = url => {
+    setUrl(url);
+  };
+
+  return { ...state, doFetch };
+};
+```
+
 **使用 useImperativeHandle 转发 ref** 
 
 ```jsx
