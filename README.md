@@ -267,7 +267,7 @@ function Article({ id }) {
 }
 ```
 
-**使用 useImperativeHandle 转发 ref ** 
+**使用 useImperativeHandle 转发 ref** 
 
 ```jsx
 function FancyInput(props, ref) {
