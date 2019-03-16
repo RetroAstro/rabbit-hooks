@@ -4,8 +4,9 @@ import { render } from 'react-dom'
 import Counter from './counter'
 import Interval from './interval'
 import Profile from './profile'
+import Message from './message'
 
-const App = () => <Profile />
+const App = () => <Message />
 
 render(
    <App />,
