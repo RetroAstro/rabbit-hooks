@@ -166,7 +166,7 @@ function Example() {
 function Greeting({ name }) {
   const [counter, setCounter] = useState(0);
     
-  // 告诉 React 来 diff 每次更新 name 是否相同，从而避免不必要的 effect 执行。
+  // 告诉 React 来 diff 当每次组件更新时 name 是否相同，从而避免不必要的 effect 执行。
   useEffect(() => {
     document.title = 'Hello, ' + name;
   }, [name]);
