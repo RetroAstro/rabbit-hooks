@@ -12,4 +12,3 @@ export const countReducer = (state, action) => {
       return { ...state }
    }
 }
-
