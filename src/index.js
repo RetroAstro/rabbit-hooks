@@ -7,9 +7,17 @@ import Interval from './interval'
 import Profile from './profile'
 import Message from './message'
 
-const App = () => <StaleCounter />
+import createChrox from './chrox'
+import { countReducer, initialState } from './chrox/test'
+import Counter from './chrox/Counter'
+
+const { Context, Provider } = createChrox(countReducer, initialState)
+
+const App = () => <Counter context={Context} />
 
 render(
-   <App />,
+   <Provider>
+     <App />
+   </Provider>,
    document.getElementById('root')
 )
