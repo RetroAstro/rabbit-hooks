@@ -491,16 +491,26 @@ const useDataApi = (initialUrl, initialData) => {
 **使用 useImperativeHandle 转发 ref** 
 
 ```jsx
-function FancyInput(props, ref) {
-  const inputRef = useRef();
-  useImperativeHandle(ref, () => ({
-    focus: () => {
-      inputRef.current.focus();
-    }
-  }));
-  return <input ref={inputRef} ... />;
+function ParentInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  return (
+    <div>
+      <ChildInput ref={inputRef} />
+    </div>
+  );
 }
-FancyInput = forwardRef(FancyInput);
+
+function ChildInput(props, ref) {
+  const inputRef = useRef(null);
+  useImperativeHandle(ref, () => inputRef.current);
+
+  return <input type="text" name="child input" ref={inputRef} />;
+}
 ```
 
 **获取组件前一次 render 的 props 和 state**

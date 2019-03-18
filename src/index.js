@@ -7,7 +7,7 @@ import Interval from './interval'
 import Profile from './profile'
 import Message from './message'
 
-const App = () => <Message />
+const App = () => <StaleCounter />
 
 render(
    <App />,

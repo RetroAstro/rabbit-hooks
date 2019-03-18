@@ -8,7 +8,7 @@ const expensiveComputation = () => 0
 // to fix the bug, we have two solutions 
 function Counter() {
    const [count, setCount] = useState(expensiveComputation)
- 
+   
    useEffect(() => {
      const id = setInterval(() => {
        setCount(count + 1)
@@ -22,6 +22,6 @@ function Counter() {
    )
 
    return <h1>{count}</h1>
- }
+}
 
 export default Counter
